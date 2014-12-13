@@ -1,14 +1,6 @@
 package com.xmunch.rest_atomspace_parser;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.Scanner;
-
 public class AppDescription {
-	
-	public static Scanner scanInput;
-	public static FileReader fileReader;
-	public static BufferedReader bufferReader;
 
 	public static final Integer SUCCESS = 200;
 	public static final String ACCEPT = "accept";
@@ -30,6 +22,5 @@ public class AppDescription {
 	public static final String COLON = ":";
 	public static final String PARAMS = "params";
 	public static final String PARAM_PROBLEM = "There was a problem parsing the param: ";
-
-
+	
 }
