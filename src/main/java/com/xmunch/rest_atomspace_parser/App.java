@@ -7,48 +7,32 @@ import java.util.Scanner;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
-public class App {
+public class App extends AppDescription{
 
-	private static Scanner scanInput;
-	private static FileReader fileReader;
-	private static BufferedReader bufferReader;
-
-	private static final Integer SUCCESS = 200;
-	private static final String ACCEPT = "accept";
-	private static final String SERVER = "http://localhost:8080/";
-	private static final String CREATE_VERTEX = "vertex/create/?";
-	private static final String CREATE_EDGE = "edge/create/?";
-	private static final String INPUT_FILE = "input.xa";
-	private static final String JSON = "application/json";
-	private static final String ERROR = "Failed : HTTP error code : ";
-	private static final String EMPTY = "";
-	private static final String SPACE = " ";
-	private static final String LABEL = "label";
-	private static final String EQUALS = "=";
-	private static final String AND = "&";
-	private static final String TYPE = "type";
-	private static final String TO = "to";
-	private static final String FROM = "from";
-	private static final Object IS_A = "is_a";
-	private static final String COLON = ":";
-
+	final static Logger logger = Logger.getLogger(App.class);
+	
 	public static void main(String[] args) {	
 		String item = EMPTY;
 		String data = EMPTY;
+		
+		BasicConfigurator.configure();
 		
 		try {
 			fileReader = new FileReader(INPUT_FILE);
 			bufferReader = new BufferedReader(fileReader);
 
 			while ((item = bufferReader.readLine()) != null) {
+				logger.info(item);
 				atomSpaceRequest(item);
 			}
 
 			bufferReader.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getLocalizedMessage());
 		}
 
 		while (true) {
@@ -56,7 +40,6 @@ public class App {
 			data = scanInput.nextLine();
 			atomSpaceRequest(data);
 		}
-
 	}
 
 	private static Boolean atomSpaceRequest(String text) {
@@ -64,18 +47,23 @@ public class App {
 		
 		try {
 			DefaultHttpClient httpClient = new DefaultHttpClient();
-			HttpGet getRequest = new HttpGet(SERVER + restApiParser(text));
+			String parsedText = restApiParser(text);
+			HttpGet getRequest = new HttpGet(SERVER + parsedText);
 			getRequest.addHeader(ACCEPT, JSON);
 
 			HttpResponse response = httpClient.execute(getRequest);
+			logger.info(SERVER + parsedText);
+			logger.info(SUCCESS);
 
-			if (response.getStatusLine().getStatusCode() != SUCCESS) {
-				throw new RuntimeException(ERROR
-						+ response.getStatusLine().getStatusCode());
+			if (response.getStatusLine().getStatusCode() == SUCCESS) {
+				logger.info(SUCCESS);
+				result = true;
+			} else {
+				logger.error(ERROR + response.getStatusLine().getStatusCode());
 			}
 
 			httpClient.getConnectionManager().shutdown();
-			result = true;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,10 +86,12 @@ public class App {
 		}
 
 		if (splittedText.length > 3) {
-			parsedText += AND;
+			parsedText += AND + PARAMS + EQUALS;
 			for (int i = 3; i < splittedText.length; i++) {
 				if (splittedText[i].split(COLON).length == 2) {
 					parsedText += splittedText[i];
+				} else {
+					logger.error(PARAM_PROBLEM+splittedText[i]);
 				}
 			}
 		}
