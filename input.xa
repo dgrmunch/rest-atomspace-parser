@@ -1,0 +1,9 @@
+atomspace is_a representation_of_knowledge
+self is_a cognitive_entity
+self has_a atomspace
+xmunch is_a nickname
+self was_created_by xmunch
+Diego_Gonzalez-Rodriguez is_a person
+Diego_Gonzalez-Rodriguez has_as_nickame xmunch
+java is_a programming_language
+xmunch programs_in java
