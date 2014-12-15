@@ -20,6 +20,7 @@ public class AppDescription {
 	public static final String FROM = "from";
 	public static final Object IS_A = "is_a";
 	public static final String COLON = ":";
+	public static final String COMMA = ",";
 	public static final String PARAMS = "params";
 	public static final String PARAM_PROBLEM = "There was a problem parsing the param: ";
 	

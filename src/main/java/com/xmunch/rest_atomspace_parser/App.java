@@ -114,6 +114,7 @@ public class App {
 			for (int i = 3; i < splittedText.length; i++) {
 				if (splittedText[i].split(AppDescription.COLON).length == 2) {
 					parsedText += splittedText[i];
+					if(i<splittedText.length-1) parsedText+=AppDescription.COMMA;
 				} else {
 					logger.error(AppDescription.PARAM_PROBLEM + splittedText[i]);
 				}
